@@ -1,1 +1,39 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0d0d1a;
+  --text: #e0f7fa;
+  --card: #1a1a2e;
+}
+
+/* ===== Aurora Theme ===== */
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+[data-theme="aurora"] {
+  --bg: #0d0d1a;
+  --text: #e0f7fa;
+  --card: #1a1a2e;
+  background: linear-gradient(270deg, #00ffcc, #ff00ff, #00ccff);
+  background-size: 600% 600%;
+  animation: aurora 30s ease infinite;
+}
+
+/* ===== Default Gradient Theme ===== */
+@keyframes defaultAnim {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+[data-theme="default"] {
+  --bg: linear-gradient(135deg, #a78bfa, #ffffff);
+  --text: #3b0064;
+  --card: #e0d7ff;
+  background: linear-gradient(135deg, #a78bfa, #ffffff);
+  background-size: 400% 400%;
+  animation: defaultAnim 20s ease infinite;
+}

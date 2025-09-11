@@ -1,7 +1,6 @@
 import { useState } from "react";
 import FormSection from "./components/FormSection";
 import PreviewSection from "./components/PreviewSection";
-import { generateHTML } from "./utils/generateHTML";
 
 export default function App() {
   const [portfolioData, setPortfolioData] = useState({
@@ -13,38 +12,50 @@ export default function App() {
     profileImage: null,
   });
 
-  const handleGenerate = () => {
-    const htmlContent = generateHTML(FormData);
-    const blob = new Blob([htmlContent], {type:"text/html"});
-    const url = URL.createObjectURL(blob);
+  const [currentPage, setCurrentPage] = useState("form");
+  const [theme, setTheme] = useState("aurora"); // default
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "portfolio.html";
-    a.click();
-
-    const newTab = window.open();
-    if (newTab) {
-      newTab.document.write(htmlContent);
-      newTab.document.close();
-    } else {
-      alert("Pop-up blocked! Please allow pop-ups to view the portfolio")
-    }
-  };
+  const themeOptions = [
+    { value: "aurora", label: "Aurora Lights" },
+    { value: "default", label: "Default Gradient" },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white py-10">
+    <div className="min-h-screen py-10 transition-all">
       <h1 className="text-4xl font-bold text-center text-indigo-600 mb-8 drop-shadow-sm">
         Portfolio Builder
       </h1>
 
-      <div className="grid md:grid-cols-2 gap-8 mb-10">
+      {/* Theme Selector Dropdown */}
+      <div className="flex justify-center mb-6">
+        <select
+          value={theme}
+          onChange={(e) => setTheme(e.target.value)}
+          className="p-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        >
+          {themeOptions.map((t) => (
+            <option key={t.value} value={t.value}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {currentPage === "form" ? (
         <FormSection
           portfolioData={portfolioData}
           setPortfolioData={setPortfolioData}
+          goToPreview={() => setCurrentPage("preview")}
         />
-        <PreviewSection portfolioData={portfolioData} />
-      </div>
+      ) : (
+        <div className="flex justify-center relative w-full min-h-[60vh]">
+          <PreviewSection
+            portfolioData={portfolioData}
+            goBack={() => setCurrentPage("form")}
+            theme={theme}
+          />
+        </div>
+      )}
     </div>
   );
 }
